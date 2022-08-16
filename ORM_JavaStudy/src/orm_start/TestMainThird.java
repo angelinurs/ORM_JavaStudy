@@ -3,13 +3,14 @@ package orm_start;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-public class TestMain {
+public class TestMainThird {
 
 	public static void main(String[] args) {
 		
@@ -28,13 +29,21 @@ public class TestMain {
 			// step 2. 에서 만든 object 를 이용해 factory 생성
 			SqlSessionFactory factory = builder.build( r );
 			
+			// delete 
+			r.close();
+			
 			// STEP 4.
 			// step 3. 에서 만든 factory 를 이용해 sql session 생성
 			ss = factory.openSession();
 			
 			// STEP 5.
 			// 원하는 sql 문 ( mapper ) 를 호출하거나 결과( List ) 를 받는다.
-			List< EmployeeVO > list = ss.selectList( "emp.all" );
+			// 검색 할 내용을 보낼때 selectList 에 object 추가
+			
+			EmployeeVO emp = new EmployeeVO();
+			emp.setHire_date( "1999-01-01" );
+			emp.setFirst_name( "a" );
+			List< EmployeeVO > list = ss.selectList( "emp.search_hire_date", emp );
 			
 			// STEP 6.
 			// 저장된 객체 리스트 출력해보기

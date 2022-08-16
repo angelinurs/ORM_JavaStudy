@@ -3,13 +3,14 @@ package orm_start;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-public class TestMain {
+public class TestMainSecond {
 
 	public static void main(String[] args) {
 		
@@ -34,7 +35,22 @@ public class TestMain {
 			
 			// STEP 5.
 			// 원하는 sql 문 ( mapper ) 를 호출하거나 결과( List ) 를 받는다.
-			List< EmployeeVO > list = ss.selectList( "emp.all" );
+			// 검색 할 내용을 보낼때 selectList 에 object 추가
+			Scanner sc = new Scanner( System.in );
+			String gender;
+			do {
+				System.out.println( "which gender ? ");
+				gender = sc.next();
+				
+				if( gender.equalsIgnoreCase( "f" ) || gender.equalsIgnoreCase( "m" ) ) {
+					break;
+				} else {
+					System.out.println( "Input just M/F ");
+				}
+				
+			} while ( true );
+			
+			List< EmployeeVO > list = ss.selectList( "emp.gender", gender );
 			
 			// STEP 6.
 			// 저장된 객체 리스트 출력해보기

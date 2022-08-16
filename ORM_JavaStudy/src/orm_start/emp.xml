@@ -10,4 +10,33 @@
   <select id="all" resultType="orm_start.EmployeeVO">
     select * from employees
   </select>
+  
+  <select id="hire_date" resultType="orm_start.EmployeeVO">
+    select * from employees where hire_date like '2000%'
+  </select>
+  
+  <!--
+  	- 지정한 값을 #{아무변수 이름} 이름으로 보낼수 있다.
+  	- 이때 보낼 parameter 타입은 parameterType attribute 를 이용해서 보낸수 있다. 
+  <select id="gender" resultType="orm_start.EmployeeVO" parameterType="java.lang.String" >
+    select * from employees where gender = #{n}
+  </select>
+   -->
+  <select id="gender" resultType="orm_start.EmployeeVO" parameterType="String" >
+    select * from employees where gender = #{n}
+  </select>
+  
+  <!--
+  	- `&gt` -> `> ` entity 로 표현하는 것이 좋다. 
+   -->
+   <!-- 
+  <select id="search_hire_date" resultType="orm_start.EmployeeVO" parameterType="orm_start.EmployeeVO" >
+    select * from employees where hire_date &gt;= #{hire_date} AND
+    							  first_name LIKE #{first_name} + '%'
+  </select>
+    -->
+  <select id="search_hire_date" resultType="orm_start.EmployeeVO" parameterType="orm_start.EmployeeVO" >
+    select * from employees where hire_date &gt;= #{hire_date} AND
+    							  first_name LIKE CONCAT( #{first_name}, '%' )
+  </select>
 </mapper>
