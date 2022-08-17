@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	https://mybatis.org/mybatis-3/ko/getting-started.html#%EB%A7%A4%ED%95%91%EB%90%9C-sql-%EA%B5%AC%EB%AC%B8-%EC%82%B4%ED%8E%B4%EB%B3%B4%EA%B8%B0 
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="department">
+  <select id="all" resultType="orm_start_mapper.vo.DepartmentVO">
+    select * from employees
+  </select>
+  
+  <select id="dept_no" resultType="orm_start_mapper.vo.DepartmentVO" parameterType="String" >
+    select * from departments where dept_no = #{n}
+  </select>
+  
+</mapper>

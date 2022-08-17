@@ -9,30 +9,24 @@
  
 <!--
 	- namespace 는 보통  특정 테이블에 관련된 이름을 지정한다.
-	- 예를 들어 각 select id 가 중복된 경우가 있어도 namespace 가 다른 경우
-	구별이 가능하다.
  -->
 <mapper namespace="emp">
-  <select id="all" resultType="orm_start.EmployeeVO">
+  <select id="all" resultType="orm_start_mapper.vo.EmployeeVO">
     select * from employees
   </select>
   
-  <select id="hire_date" resultType="orm_start.EmployeeVO">
+  <select id="hire_date" resultType="orm_start_mapper.vo.EmployeeVO">
     select * from employees where hire_date like '2000%'
   </select>
   
   <!--
   	- 지정한 값을 #{아무변수 이름} 이름으로 보낼수 있다.
-  	- #{name} 은 mybatis 변수이다. 
-  		+ 이 명칭은 parameterTyoe 에 정의된 객체와 연관성을 가져야 좋다.
-  		+ 만약에 parameterType 에 int 나 String 등의 일반 타입이 지정되었다면 
-  		+ #{ } 이름을 아무거나 지정해도 된다.  
   	- 이때 보낼 parameter 타입은 parameterType attribute 를 이용해서 보낸수 있다. 
   <select id="gender" resultType="orm_start.EmployeeVO" parameterType="java.lang.String" >
     select * from employees where gender = #{n}
   </select>
    -->
-  <select id="gender" resultType="orm_start.EmployeeVO" parameterType="String" >
+  <select id="gender" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="String" >
     select * from employees where gender = #{n}
   </select>
   
@@ -40,13 +34,30 @@
   	- `&gt` -> `> ` entity 로 표현하는 것이 좋다. 
    -->
    <!-- 
-  <select id="search_hire_date" resultType="orm_start.EmployeeVO" parameterType="orm_start.EmployeeVO" >
+  <select id="search_hire_date" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="orm_start_mapper.vo.EmployeeVO" >
     select * from employees where hire_date &gt;= #{hire_date} AND
     							  first_name LIKE #{first_name} + '%'
   </select>
     -->
-  <select id="search_hire_date" resultType="orm_start.EmployeeVO" parameterType="orm_start.EmployeeVO" >
-    select * from employees where hire_date &gt;= #{hire_date} AND
-    							  first_name LIKE CONCAT( #{first_name}, '%' )
+  <select id="search_hire_date" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="String" >
+    select * from employees 
+    where hire_date LIKE CONCAT( '%', #{date}, '%' )
   </select>
+  
+  <select id="search_name" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="String" >
+    select * from employees 
+    where first_name LIKE CONCAT( '%', #{name}, '%' )
+  </select>
+  
+  <select id="search_emp_no" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="String" >
+  	select * from employees
+  	where emp_no = #{n}
+  </select>
+  <!-- 
+   -->
+  <select id="search_between_date" resultType="orm_start_mapper.vo.EmployeeVO" parameterType="java.util.Map" >
+  	select * from employees
+  	where hire_date BETWEEN date_format( #{from}, '%Y-%m-%d' ) AND date_format( #{to}, '%Y-%m-%d' )
+  </select>
+  
 </mapper>
