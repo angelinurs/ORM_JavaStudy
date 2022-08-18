@@ -70,7 +70,6 @@ public class BookMain_JFrame extends JFrame {
 		super( "Book info" );
 		
 		add( mainPane = new JPanel( new BorderLayout() ) );
-		mainPane.setBorder( BorderFactory.createEmptyBorder() );
 		
 		setMainMenubar();
 		setCenterPane();
@@ -291,7 +290,7 @@ public class BookMain_JFrame extends JFrame {
 		model = new BooksModel( null, columns );
 		table = new JTable( model );
 
-		mainPane.add( centerPane = new JPanel() );
+		mainPane.add( centerPane = new JPanel( new BorderLayout() ) );
 		centerPane.add( jsPane = new JScrollPane( table ) );
 	}
 	
