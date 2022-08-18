@@ -69,8 +69,15 @@ public class Orm_start_mapper_main_JFrame extends JFrame {
 		setBounds( 300, 300, 800, 800 );
 		setVisible( true );
 		
+		setEvent();
+		
+	}
+	
+	// events
+	private void setEvent() {
+		
 		addWindowListener( new WindowAdapter() {
-
+			
 			@Override public void windowClosing(WindowEvent e) {
 				if( ss != null ) ss.close();
 				
@@ -157,7 +164,7 @@ public class Orm_start_mapper_main_JFrame extends JFrame {
 		
 		// when table row is clicked, occured event
 		table.addMouseListener( new MouseAdapter() {
-
+			
 			@Override public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
 //				int col = table.getSelectedColumn();
@@ -184,6 +191,7 @@ public class Orm_start_mapper_main_JFrame extends JFrame {
 				
 			}
 		});
+		
 	}
 
 	private void setMenubar() {

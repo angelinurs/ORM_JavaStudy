@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	https://mybatis.org/mybatis-3/ko/getting-started.html#%EB%A7%A4%ED%95%91%EB%90%9C-sql-%EA%B5%AC%EB%AC%B8-%EC%82%B4%ED%8E%B4%EB%B3%B4%EA%B8%B0 
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!--
+	- namespace 는 보통  특정 테이블에 관련된 이름을 지정한다.
+ -->
+<mapper namespace="book">
+
+	<!--  save book info -->
+	<!-- to map -->
+	<insert id="add_map"  parameterType="Map" >
+		INSERT INTO book_info ( b_name, b_price, b_isbn, a_id )
+		VALUES ( #{b_name}, #{b_price}, #{b_isbn}, #{a_id} )
+	</insert>
+	
+	<!-- to vo -->
+	<insert id="add_vo"  parameterType="orm_ex_books.vo.BookVO" >
+		INSERT INTO book_info ( b_name, b_price, b_isbn, a_id )
+		VALUES ( #{b_name}, #{b_price}, #{b_isbn}, #{a_id} )
+	</insert>
+	
+	<!-- to arraylist -->
+	<insert id="add_arraylist"  parameterType="java.util.Map" >
+		INSERT INTO book_info ( b_name, b_price, b_isbn, a_id )
+		VALUES
+			<!-- 
+				- List 형으로 저장된 map 객체를 insert 할때 사용
+				+ collection 은 map 에 저장된 key 이름
+				+ item 은 list 에 저장된 객체이름 마음대로 정할수 있음.
+				+ seperator 는 mysql 에서 지원하는 다중레코드 insert 시 사용하는 ',' 사용
+			-->
+			<foreach collection="List" item="vo" separator="," >
+				( #{vo.b_name}, #{vo.b_price}, #{vo.b_isbn}, #{vo.a_id} )
+			</foreach> 
+	</insert>
+	
+	<!-- select all -->
+	<select id="selectAll" resultType="orm_ex_books.vo.BookVO">
+		SELECT * FROM `publisher`.book_info
+	</select>
+	
+	<!--  select by id ( general form ) -->
+	<select id="search_id" resultType="orm_ex_books.vo.BookVO" parameterType="String">
+		SELECT * FROM book_info
+		WHERE b_id = #{id}
+	</select>
+	
+	<!--  select by id ( use IN statement ) -->
+	<select id="search_id_in" resultType="orm_ex_books.vo.BookVO" parameterType="Map">
+		SELECT * FROM book_info
+		WHERE b_id IN (
+			<foreach collection="id_list" item="id" separator=",">
+				#{id}
+			</foreach> 
+		 )
+	</select>
+	
+	<select id="search_name_and_price" resultType="orm_ex_books.vo.BookVO" parameterType="Map">
+		SELECT * FROM book_info
+		<where>
+			<if test = "b_name != null and b_price == null" >
+				b_name LIKE CONCAT( '%', #{b_name}, '%')
+			</if>
+			<if test = "b_name != null and b_price != null" >
+			 	b_name LIKE CONCAT( '%', #{b_name}, '%') AND b_price = #{b_price} 
+			</if>
+			<if test = "b_name == null and b_price != null" >
+				b_price = #{b_price}
+			</if>
+		</where>
+	</select>
+  
+</mapper>
