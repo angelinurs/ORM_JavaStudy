@@ -1,17 +1,23 @@
 package orm_ex_books.clilent;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -22,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.table.TableModel;
 
 import org.apache.ibatis.io.Resources;
@@ -33,7 +40,13 @@ import orm_ex_books.vo.BookVO;
 
 public class BookMain_JFrame extends JFrame {
 	
+	JPanel mainPane;
+	JPanel centerPane,
+		   southPane;
+	
 	JScrollPane jsPane;
+	
+	JLabel infoSouthLabel;
 	
 	JTable table;
 	TableModel model;
@@ -56,16 +69,26 @@ public class BookMain_JFrame extends JFrame {
 	public BookMain_JFrame() {
 		super( "Book info" );
 		
+		add( mainPane = new JPanel( new BorderLayout() ) );
+		mainPane.setBorder( BorderFactory.createEmptyBorder() );
+		
 		setMainMenubar();
-		setJsPane();
+		setCenterPane();
+		setSouthPane();
 		
 		pack();
+		
+		setThisEvents();
 		
 		getSqlSession();
 		
 		setBounds( 300, 300, 500, 500 );
 		setVisible( true );
 		
+	}
+	
+
+	private void setThisEvents() {
 		addWindowListener( new WindowAdapter() {
 
 			@Override public void windowClosing(WindowEvent e) {
@@ -80,6 +103,8 @@ public class BookMain_JFrame extends JFrame {
 				SqlSession ss = factory.openSession();
 				
 				List<BookVO> list = ss.selectList( "book.selectAll" );
+				
+//				list.forEach( ( x )-> { System.out.println( x.toString() ); });
 
 				runSelectQuery( list );
 				
@@ -121,9 +146,7 @@ public class BookMain_JFrame extends JFrame {
 					runSelectQuery( list );
 					
 					if( ss != null ) ss.close();
-					
 				}
-				
 			}
 		});
 		
@@ -151,7 +174,7 @@ public class BookMain_JFrame extends JFrame {
 				isbnInsertPane.add( isbnLabel = new JLabel( "도서 isbn : " ) );
 				isbnInsertPane.add( isbnText = new JTextField( 10 ) );
 				
-				int val = JOptionPane.showConfirmDialog( null, mainInsertPane );
+				int val = JOptionPane.showConfirmDialog( null, mainInsertPane, "도서 정보 추가하기", JOptionPane.OK_CANCEL_OPTION  );
 				
 				String name = nameText.getText().trim();
 				String price = priceText.getText().trim();
@@ -171,6 +194,8 @@ public class BookMain_JFrame extends JFrame {
 					ss.insert( "add_map", map );
 					
 					if( ss != null ) ss.close();
+					
+					infoSouthLabel.setText( "commit is success" );
 				}
 			}
 		});
@@ -194,7 +219,8 @@ public class BookMain_JFrame extends JFrame {
 				priceSelectPane.add( priceSelectLabel = new JLabel( "도서 가격 : " ) );
 				priceSelectPane.add( priceSelectText = new JTextField( 10 ) );
 				
-				int val = JOptionPane.showConfirmDialog( null, mainSelectPane );
+//				int val = JOptionPane.showConfirmDialog( null, mainSelectPane );
+				int val = JOptionPane.showConfirmDialog( null, mainSelectPane, "도서 제목과 가격으로 검색하기", JOptionPane.OK_CANCEL_OPTION );
 				
 				String name = nameSelectText.getText().trim();
 				String price = priceSelectText.getText().trim();
@@ -210,7 +236,7 @@ public class BookMain_JFrame extends JFrame {
 						map.put( "b_price", price );
 					}
 					
-					System.out.println( map.toString() );
+//					System.out.println( map.toString() );
 					
 					SqlSession ss = factory.openSession();
 					
@@ -240,6 +266,11 @@ public class BookMain_JFrame extends JFrame {
 		}
 		
 		table.setModel( new BooksModel( doubleList, columns ) );
+		
+		DecimalFormat df = new DecimalFormat( "#,###" );
+		String convertFormatTodeimal = "search list counts : " + df.format( list.size() );
+		
+		infoSouthLabel.setText(  convertFormatTodeimal );
 	}
 	
 	private void setMainMenubar() {
@@ -256,11 +287,19 @@ public class BookMain_JFrame extends JFrame {
 		setJMenuBar( bar );
 	}
 
-	private void setJsPane() {
+	private void setCenterPane() {
 		model = new BooksModel( null, columns );
 		table = new JTable( model );
+
+		mainPane.add( centerPane = new JPanel() );
+		centerPane.add( jsPane = new JScrollPane( table ) );
+	}
+	
+	private void setSouthPane() {
 		
-		add( jsPane = new JScrollPane( table ) );
+		mainPane.add( southPane = new JPanel(), BorderLayout.SOUTH );
+		southPane.add( infoSouthLabel = new JLabel( "Book info on database...." ), BorderLayout.WEST );
+		
 	}
 	
 	private int getSqlSession() {
