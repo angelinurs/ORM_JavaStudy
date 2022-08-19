@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employee">
+	<select id="search" resultType="ex_employee.vo.EmployeeVO" parameterType="java.util.Map">
+		SELECT * FROM `employees`.`employees`
+		<where>
+			<if test="emp_no != null" >
+				emp_no = #{emp_no}
+			</if>
+			<if test="birth_date != null" >
+				birth_date LIKE CONCAT( '%', #{birth_date}, '%' )
+			</if>
+			<if test="first_name != null" >
+				first_name LIKE CONCAT( '%', #{first_name}, '%' )
+			</if>
+			<if test="last_name != null" >
+				last_name LIKE CONCAT( '%', #{last_name}, '%' )
+			</if>
+			<if test="gender != null" >
+				gender = #{gender}
+			</if>
+			<if test="hire_date != null" >
+				hire_date LIKE CONCAT( '%', #{hire_date}, '%' )
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add" parameterType="map">
+		INSERT INTO `employees`.`employees` ( emp_no, birth_date, first_name, last_name, gender, hire_date )
+		VALUES ( emp_no, #{birth_date}, #{first_name}, #{last_name}, #{gender}, #{hire_date} )
+	</insert>
+  
+</mapper>

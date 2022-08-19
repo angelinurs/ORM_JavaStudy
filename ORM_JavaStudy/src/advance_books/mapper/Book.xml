@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="book">
+	<select id="search" resultType="advance_books.vo.BookVO" parameterType="java.util.Map">
+		SELECT * FROM book_info
+		<!--  
+			- multi case use `if` 
+		-->
+		<!-- 
+		<where>
+			<if test="search_type == 0">
+				b_id = #{searchValue}
+			</if>
+			<if test="search_type == 1">
+				a_name = a_name LIKE CONCAT( '%', #{searchValue}, '%' )
+			</if>
+			<if test="search_type == 2">
+				b_price = #{searchValue}
+			</if>
+			<if test="search_type == 3">
+				b_isbn = #{searchValue}
+			</if>
+			<if test="search_type == 4">
+				a_id = #{searchValue}
+			</if>
+		</where>
+		 -->
+		<!--  
+			- multi case use `choose` 
+		-->
+		 <where>
+			 <choose>
+			 	<when test="search_type == null">
+			 	</when>
+			 	<when test="search_type == 0">
+			 		b_id = #{searchValue}
+			 	</when>
+			 	<when test="search_type == 1">
+			 		b_name LIKE CONCAT( '%', #{searchValue}, '%' )  
+			 	</when>
+			 	<when test="search_type == 2">
+			 		b_price = #{searchValue}
+			 	</when>
+			 	<when test="search_type == 3">
+			 		b_isbn = #{searchValue}
+			 	</when>
+			 	<when test="search_type == 4">
+			 		a_id = #{searchValue}
+			 	</when>
+			 </choose>
+		 </where>
+	</select>
+	
+	
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO book_info ( b_name, b_price, b_isbn, a_id )
+		VALUES ( #{name}, #{price}, #{isbn}, 1 )
+	</insert>
+	<insert id="add_vo" parameterType="advance_books.vo.BookVO">
+		INSERT INTO book_info ( b_name, b_price, b_isbn, a_id )
+		VALUES ( #{b_name}, #{b_price}, #{b_isbn}, 1 )
+	</insert>
+	
+	
+	<update id="modify" parameterType="java.util.Map">
+		UPDATE book_info 
+		<!--  
+			- multi case use `trim` 
+		-->
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="b_name != null">
+				b_name = #{b_name},
+			</if>
+			<if test="b_price != null">
+				b_price = #{b_price},
+			</if>
+			<if test="b_isbn != null">
+				b_isbn = #{b_isbn},
+			</if>
+		</trim>
+		WHERE b_id = #{b_id}
+	</update>
+
+</mapper>
