@@ -1,12 +1,16 @@
 package ex_employee.vo;
 
 public class EmployeeVO {
+	int row_number;
 	String emp_no;
 	String birth_date;
 	String first_name;
 	String last_name;
 	String gender;
 	String hire_date;
+	
+	public int getRowNumber() { return row_number; }
+	public void setRowNumber(int rowNumber) { this.row_number = rowNumber; }
 	
 	public String getEmp_no() { return emp_no; }
 	public void setEmp_no(String emp_no) { this.emp_no = emp_no; }

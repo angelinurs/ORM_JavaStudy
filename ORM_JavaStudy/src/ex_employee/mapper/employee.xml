@@ -3,33 +3,96 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="employee">
-	<select id="search" resultType="ex_employee.vo.EmployeeVO" parameterType="java.util.Map">
-		SELECT * FROM `employees`.`employees`
+
+	<select id="total_page" resultType="int">
+		SELECT COUNT( * ) FROM `employees`.`employees`
+	</select>
+
+	<select id="all_with_index" resultType="ex_employee.vo.EmployeeVO" parameterType="java.util.Map">
+		SELECT t.* 
+		FROM (
+				SELECT @rn:=@rn+1 AS `row_number`, e.*
+				FROM `employees`.`employees` e , ( SELECT @rn:=0 ) r
+				order by e.emp_no
+			) t
 		<where>
-			<if test="emp_no != null" >
-				emp_no = #{emp_no}
+			<if test="begin != null">
+				`row_number` BETWEEN #{begin} AND #{end}
 			</if>
-			<if test="birth_date != null" >
-				birth_date LIKE CONCAT( '%', #{birth_date}, '%' )
-			</if>
-			<if test="first_name != null" >
-				first_name LIKE CONCAT( '%', #{first_name}, '%' )
-			</if>
-			<if test="last_name != null" >
-				last_name LIKE CONCAT( '%', #{last_name}, '%' )
-			</if>
-			<if test="gender != null" >
-				gender = #{gender}
-			</if>
-			<if test="hire_date != null" >
-				hire_date LIKE CONCAT( '%', #{hire_date}, '%' )
+		</where>
+		
+	</select>
+
+	<select id="last_id" resultType="int">
+		SELECT MAX( `emp_no` ) FROM `employees`
+	</select>
+
+	<select id="search" resultType="ex_employee.vo.EmployeeVO" parameterType="java.util.Map">
+		<!-- 
+			SELECT * FROM `employees`.`employees`
+			<trim prefix="where" suffixOverrides=" AND">
+				<if test="emp_no != null" >
+					e.emp_no = #{emp_no} AND
+				</if>
+				<if test="birth_date != null" >
+					e.birth_date LIKE CONCAT( '%', #{birth_date}, '%' ) AND
+				</if>
+				<if test="first_name != null" >
+					e.first_name LIKE CONCAT( '%', #{first_name}, '%' ) AND
+				</if>
+				<if test="last_name != null" >
+					e.last_name LIKE CONCAT( '%', #{last_name}, '%' ) AND
+				</if>
+				<if test="gender != null" >
+					e.gender = #{gender} AND
+				</if>
+				<if test="hire_date != null" >
+					e.hire_date LIKE CONCAT( '%', #{hire_date}, '%' ) AND
+				</if>
+			</trim>
+		-->
+		SELECT t.* 
+		FROM (
+				SELECT @rn:=@rn+1 AS `row_number`, e.*
+				FROM `employees`.`employees` e , ( SELECT @rn:=0 ) r
+				<trim prefix="where" suffixOverrides=" AND">
+					<if test="emp_no != null" >
+						e.emp_no = #{emp_no} AND
+					</if>
+					<if test="birth_date != null" >
+						e.birth_date LIKE CONCAT( '%', #{birth_date}, '%' ) AND
+					</if>
+					<if test="first_name != null" >
+						e.first_name LIKE CONCAT( '%', #{first_name}, '%' ) AND
+					</if>
+					<if test="last_name != null" >
+						e.last_name LIKE CONCAT( '%', #{last_name}, '%' ) AND
+					</if>
+					<if test="gender != null" >
+						e.gender = #{gender} AND
+					</if>
+					<if test="hire_date != null" >
+						e.hire_date LIKE CONCAT( '%', #{hire_date}, '%' ) AND
+					</if>
+				</trim>
+				order by e.emp_no
+			) t
+		<where>
+			<if test="begin != null">
+				`row_number` BETWEEN #{begin} AND #{end}
 			</if>
 		</where>
 	</select>
 	
 	<insert id="add" parameterType="map">
 		INSERT INTO `employees`.`employees` ( emp_no, birth_date, first_name, last_name, gender, hire_date )
-		VALUES ( emp_no, #{birth_date}, #{first_name}, #{last_name}, #{gender}, #{hire_date} )
+		VALUES ( #{emp_no}, #{birth_date}, #{first_name}, #{last_name}, #{gender}, #{hire_date} )
 	</insert>
+	
+	<update id="update" parameterType="map">
+		UPDATE `employees`.`employees`
+		SET birth_date = #{birth_date}, first_name = #{first_name}, last_name = #{last_name}, gender = #{gender}, hire_date=#{hire_date}
+		WHERE emp_no = #{emp_no}
+	</update>
   
 </mapper>
