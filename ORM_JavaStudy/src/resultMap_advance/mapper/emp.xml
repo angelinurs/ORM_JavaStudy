@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employee">
+
+	<resultMap type="resultMap_advance.vo.BuseoVO" id="deptMap">
+		<association property="svo" javaType="resultMap_advance.vo.SawonVO" 
+					 select="getSawon" column="emp_no">
+		</association>
+	</resultMap>
+
+	<select id="all" resultMap="deptMap" >
+	SELECT * 
+	from departments d 
+		LEFT JOIN dept_manager dm ON d.dept_no = dm.dept_no
+	WHERE dm.to_date LIKE CONCAT( '9999', '%' )
+	</select>
+
+	<select id="getSawon" resultType="resultMap_advance.vo.SawonVO" parameterType="String">
+	SELECT * 
+	from employees 
+	WHERE emp_no = #{no}
+	</select>
+	
+</mapper>

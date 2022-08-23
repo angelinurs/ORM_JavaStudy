@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employee">
+
+	<resultMap id="voToMap" type="resultMap_start.vo.EmployeeVO">
+		<!--
+		result tag 에서 property 는 VO 의 property,
+		column 은 table 의 column
+		 -->
+		<result property="hdate" column="hire_date" />
+	</resultMap>
+
+	<select id="all" resultMap="voToMap">
+		select * from `employees`.`employees`
+	</select>
+	
+	<!-- employees and dept_emp join -->
+	<resultMap type="resultMap_start.vo.DeptEmpVO" id="deptEmpToMap">
+	
+		<result column="first_name" property="fname"/> 
+		<result column="last_name" property="lname"/> 
+		<result column="birth_date" property="bdate"/> 
+		<result column="hire_date" property="hdate"/> 
+		 
+	</resultMap>
+	
+	<select id="search_dept_no" resultMap="deptEmpToMap">
+	SELECT *
+	FROM (
+		SELECT e.*, de.dept_no
+		FROM employees e LEFT JOIN dept_emp de on e.emp_no = de.emp_no
+	    WHERE de.to_date LIKE CONCAT( '9999' , '%' ) 
+	    	AND e.emp_no > 499996
+		) d
+	ORDER BY emp_no
+	</select>
+	
+	<!-- employees and dept_emp and departments join -->
+	<resultMap type="resultMap_start.vo.DeptEmpVO2" id="deptEmpToMap2">
+	
+		<result column="first_name" property="fname"/> 
+		<result column="last_name" property="lname"/> 
+		<result column="birth_date" property="bdate"/> 
+		<result column="hire_date" property="hdate"/> 
+		<result column="dept_no" property="dept_no"/> 
+		 
+	</resultMap>
+
+	<select id="search_dept_name" resultMap="deptEmpToMap2">
+	SELECT *
+	FROM (
+		SELECT e.*, de.dept_no, d.dept_name
+		FROM employees e LEFT JOIN dept_emp de ON e.emp_no = de.emp_no
+						 LEFT JOIN departments d ON de.dept_no = d.dept_no
+	    WHERE de.to_date LIKE CONCAT( '9999' , '%' ) 
+	    	-- AND e.emp_no > 499996
+		) d
+	ORDER BY emp_no
+	</select>
+	
+	<!-- parameter -> depart code , result dept_name -->
+	<resultMap id="deptEmpToMap3" type="resultMap_start.vo.DeptEmpVO3">
+	
+		<result column="first_name" property="fname"/> 
+		<result column="last_name" property="lname"/> 
+		<result column="birth_date" property="bdate"/> 
+		<result column="hire_date" property="hdate"/> 
+		<result column="dept_no" property="dept_no"/>
+		<association property="dvo" select="getDept" 
+					 column="dept_no" javaType="resultMap_start.vo.DeptVO">
+		</association>
+		<association property="dmvo" select="getDeptManager" 
+					 column="dept_no" javaType="resultMap_start.vo.DeptManagerVO">
+		</association> 
+		 
+	</resultMap>
+	
+	<select id="search_dept_names" resultMap="deptEmpToMap3">
+	SELECT *
+	FROM (
+		SELECT e.*, de.dept_no
+		FROM employees e LEFT JOIN dept_emp de ON e.emp_no = de.emp_no
+	    WHERE de.to_date LIKE CONCAT( '9999' , '%' ) 
+		) d
+	ORDER BY emp_no
+	</select>
+	
+	<select id="getDept" resultType="resultMap_start.vo.DeptVO" parameterType="String">
+	SELECT *
+	FROM departments
+	WHERE dept_no = #{dept_no}
+	</select>
+	
+	<select id="getDeptManager" resultType="resultMap_start.vo.DeptManagerVO" parameterType="String">
+	SELECT *
+	FROM dept_manager
+	WHERE to_date LIKE CONCAT( '9999', '%')
+	AND dept_no = #{dept_no}
+	</select>
+	
+</mapper>
