@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+  
+  <select id="search_emp" resultType="am.vo.EmpVO" parameterType="String">
+  	SELECT * FROM employees
+  	WHERE emp_no IN (SELECT emp_no FROM dept_emp
+  					WHERE to_date LIKE '9999%'
+  					AND dept_no = #{no})
+  </select>
+
+</mapper>
+
+
+

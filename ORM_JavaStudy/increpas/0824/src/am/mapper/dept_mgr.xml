@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept_mgr">
+
+  
+  <select id="getDept" resultType="am.vo.DeptEmpVO" parameterType="String">
+  	SELECT dm.emp_no, dm.dept_no,
+		d.dept_name, dm.from_date, dm.to_date 
+	FROM dept_manager dm, departments d
+	WHERE dm.dept_no = d.dept_no 
+	AND dm.emp_no = #{no}
+  </select>
+
+</mapper>

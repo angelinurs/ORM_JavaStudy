@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept">
+
+	<resultMap type="pm.vo.BuseoVO" id="map1">
+		<association property="svo" javaType="pm.vo.SawonVO" 
+			select="getSawon" column="emp_no"/>
+	</resultMap>
+
+
+	<select id="all" resultMap="map1">
+		SELECT * FROM employees.departments d,
+			employees.dept_manager dm
+		WHERE d.dept_no = dm.dept_no 
+		AND to_date LIKE '9999%'
+	</select>
+
+	<select id="getSawon" resultType="pm.vo.SawonVO" parameterType="String">
+		SELECT * FROM employees
+		WHERE emp_no = #{no}
+	</select>
+</mapper>
+
+
+
+
+
+

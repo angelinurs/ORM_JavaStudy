@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="book">
+
+  <select id="search" resultType="am.vo.BookVO" parameterType="java.util.Map">
+    SELECT * FROM book_t
+    <where><!-- 
+    	<if test="searchType == 0">
+    		b_id = #{searchValue}
+    	</if>
+    	<if test="searchType == 1">
+    		b_title LIKE CONCAT('%',#{searchValue},'%')
+    	</if>
+    	<if test="searchType == 2">
+    		b_author LIKE CONCAT('%',#{searchValue},'%')
+    	</if>
+    	 -->
+    	 <choose>
+    	 	<when test="searchType == 0">b_id = #{searchValue}</when>
+    	 	<when test="searchType == 1">b_title LIKE CONCAT('%',#{searchValue},'%')</when>
+    	 	<when test="searchType == 2">b_author LIKE CONCAT('%',#{searchValue},'%')</when>
+    	 	<when test="searchType == 3">b_price = #{searchValue}</when>
+    	 </choose>
+    </where>
+  </select>
+  
+  <insert id="add" parameterType="am.vo.BookVO">
+  	INSERT INTO book_t (b_title, b_author, b_press, b_price)
+  	VALUES (#{b_title}, #{b_author}, #{b_press}, #{b_price})
+  </insert>
+
+
+  <update id="edit" parameterType="Map">
+  	UPDATE book_t
+  	<trim prefix="SET" suffixOverrides=",">
+  		<if test="title != null">
+  			b_title = #{title},
+  		</if>
+  		<if test="author != null">
+  			b_author = #{author},
+  		</if>
+  		<if test="press != null">
+  			b_press = #{press},
+  		</if>
+  		<if test="price != null">
+  			b_price = #{price},
+  		</if>
+  	</trim>
+  	WHERE b_id = #{id}
+  </update>
+  
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

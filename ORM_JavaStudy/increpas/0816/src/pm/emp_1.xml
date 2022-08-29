@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+  <!-- 결과를 각 레코드들마다 EmpVO를 만들어서 List에 담아 한번에 보낸다. -->
+  <select id="all" resultType="pm.EmpVO">
+    select * from employees
+  </select>
+  
+  <!-- parameterType="String"이라는 것은 인자로 문자열 하나를 받아 #{n}에 대입하여
+  		SQL문장을 수행한 후 그 결과를 각 레코드들마다 EmpVO로 만들어 List에 담아 보낸다. -->
+  <select id="search_gender" resultType="pm.EmpVO" parameterType="String">
+  	SELECT * FROM employees 
+  	WHERE gender = #{n}
+  </select>
+  
+  <select id="search" resultType="pm.EmpVO" parameterType="pm.EmpVO">
+  	SELECT * FROM employees
+  	WHERE hire_date &gt;= #{hire_date} AND
+  			first_name LIKE CONCAT(#{first_name},'%')
+  </select>
+  
+</mapper>
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sal">
+
+  <!-- 사번을 인자로 받아서 해당 사원이 받아왔던 급여의 스토리들 반환 -->
+  <select id="getSalary" resultType="am.vo.SalVO" parameterType="String">
+  	SELECT * FROM salaries
+  	WHERE emp_no = #{no}
+  </select>
+  
+</mapper>

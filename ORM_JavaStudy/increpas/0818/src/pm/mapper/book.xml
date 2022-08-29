@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="book">
+
+	<!-- 전체보기 -->
+	<select id="total" resultType="pm.vo.BookVO">
+		SELECT * FROM book_t
+		ORDER BY b_id
+	</select>
+	
+	<!-- b_id로 검색 -->
+	<select id="search_id" resultType="pm.vo.BookVO" parameterType="java.util.Map">
+		SELECT * FROM book_t
+		WHERE b_id IN (
+			<foreach collection="ar" item="vo" separator=",">
+				#{vo}				
+			</foreach>
+		)
+	</select>
+	
+	<select id="search_book" resultType="pm.vo.BookVO" parameterType="java.util.Map">
+		SELECT * FROM book_t
+		<where>
+			<if test="book_name != null">
+				b_title LIKE CONCAT('%', #{book_name}, '%')
+			</if>
+			<if test="book_name != null and press != null">
+				and b_press LIKE CONCAT('%', #{press}, '%')
+			</if>
+			<if test="book_name == null and press != null">
+				b_press LIKE CONCAT('%', #{press}, '%')
+			</if>
+		</where>
+	</select>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+

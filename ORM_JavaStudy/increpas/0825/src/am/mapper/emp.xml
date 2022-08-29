@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+  <resultMap type="am.vo.EmpVO" id="map1">
+  	<id column="emp_no" property="emp_no"/>
+  	
+  	<!-- 각 사원들의 그 동안 받은 급여 정보들 -->
+  	<collection property="s_list" select="sal.getSalary" column="emp_no"
+  		ofType="am.vo.SalVO"/>
+  </resultMap>
+
+  <select id="searchEmp" resultMap="map1" parameterType="String">
+    SELECT * FROM employees
+    WHERE emp_no IN (
+    	SELECT emp_no FROM dept_emp
+    	WHERE dept_no = #{no}
+    )
+  </select>
+  
+</mapper>

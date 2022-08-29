@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+  <!-- 전체보기 -->
+  <select id="total" resultType="pm.vo.EmpVO">
+    select * from employees
+  </select>
+  
+  <!-- 이름검색 -->
+  <select id="search_name" resultType="pm.vo.EmpVO" parameterType="String">
+  	SELECT * FROM employees
+  	WHERE first_name LIKE CONCAT('%', #{n}, '%')  
+  </select>
+  
+  <!-- 사번검색 -->
+  <select id="search_empno" resultType="pm.vo.EmpVO" parameterType="String">
+  	SELECT * FROM employees
+  	WHERE emp_no = #{no}
+  </select>
+  
+  <!-- 입사일검색 : 인자를 2개 이상 받을 때 Map구조로 받을 수 있다. 
+  	mybatis변수를 사용할 때는 반드시 Map에 등록된 Key를 활용해야 함! -->
+  <select id="search_hire_date" resultType="pm.vo.EmpVO" parameterType="java.util.Map">
+  	SELECT * FROM employees
+  	WHERE hire_date BETWEEN date_format(#{begin}, '%Y-%m-%d') AND date_format(#{end}, '%Y-%m-%d')
+  	ORDER BY hire_date
+  </select>
+  
+</mapper>
+
+
+

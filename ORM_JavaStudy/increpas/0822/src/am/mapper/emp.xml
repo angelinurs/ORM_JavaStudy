@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+  <select id="all" resultType="am.vo.EmpVO">
+  	SELECT * FROM employees
+  </select>
+  
+  <select id="total" resultType="am.vo.EmpVO" parameterType="java.util.Map">
+    SELECT a.* 
+    FROM (SELECT @RN:=@RN+1 AS rownum, e.* 
+    		FROM employees e, (SELECT @RN:=0) r
+    	) a
+    WHERE rownum BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 전체 레코드 수를 반환 -->
+  <select id="totalCount" resultType="int">
+  	SELECT COUNT(*) FROM employees
+  </select>
+  
+  <!-- 검색을 위한 동적쿼리 -->
+  <select id="search" resultType="am.vo.EmpVO" parameterType="java.util.Map">
+  	SELECT * FROM employees
+  	<trim prefix="WHERE" suffixOverrides="AND">
+  		<if test="empno != null">
+  			emp_no LIKE CONCAT(#{empno},'%') AND
+  		</if>
+  		<if test="name != null">
+  			first_name LIKE CONCAT('%',#{name},'%') AND
+  		</if>
+  		<if test="hdate != null">
+  			hire_date LIKE CONCAT(#{hdate},'%') AND
+  		</if>
+  	</trim>
+  	ORDER BY hire_date ASC
+  </select>
+  
+</mapper>
+
+
+
+
+
+

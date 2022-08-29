@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="book">
+
+	<!-- 도서정보 저장 -->
+	<insert id="add" parameterType="Map">
+		INSERT INTO book_t(b_title, b_author, b_press, b_price)
+		VALUES (#{title}, #{author}, #{press}, #{price})
+	</insert>
+	
+	<insert id="add2" parameterType="am.vo.BookVO">
+		INSERT INTO book_t(b_title, b_author, b_press, b_price)
+		VALUES (#{b_title}, #{b_author}, #{b_press}, #{b_price})
+	</insert>
+	
+	<insert id="add3" parameterType="java.util.Map">
+		INSERT INTO book_t(b_title, b_author, b_press, b_price)
+		VALUES 
+			<foreach collection="list" item="vo" separator=",">			
+				(#{vo.b_title}, #{vo.b_author}, #{vo.b_press}, #{vo.b_price})
+			</foreach>
+	</insert>
+	
+	<select id="total" resultType="am.vo.BookVO">
+		SELECT * FROM book_t
+		ORDER BY b_id ASC
+	</select>
+	
+	<select id="search_id" resultType="am.vo.BookVO" parameterType="String">
+		SELECT * FROM book_t
+		WHERE b_id = #{id}
+	</select>
+	<select id="select_id" resultType="am.vo.BookVO" parameterType="Map">
+		SELECT * FROM book_t
+		WHERE b_id IN (
+		<foreach collection="id_list" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
+</mapper>
+
+
+
+
+
+

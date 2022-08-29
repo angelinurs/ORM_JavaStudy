@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept_emp">
+
+  <resultMap type="am.vo.DeptVO" id="all_map">
+  	<!-- 기본키 설정 -->
+  	<id column="dept_no" property="dept_no"/>
+  	
+  	<collection property="e_list" select="emp.search_emp" 
+  		ofType="am.vo.EmpVO" column="dept_no"/>
+  </resultMap>
+
+  <select id="all" resultMap="all_map">
+    SELECT * FROM departments
+  </select>
+  
+  
+
+</mapper>
+
+
+

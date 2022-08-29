@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+  <resultMap type="am.vo.EmpVO" id="m1">
+  	<result column="hire_date" property="hdate"/>
+  </resultMap>
+  
+  <resultMap type="am.vo.DeptEmpVO" id="map2">
+  	<result column="first_name" property="f_name"/>
+  	<result column="birth_date" property="b_date"/>
+  	<result column="hire_date" property="h_date"/>
+  	<result column="dept_no" property="deptno"/>
+  	<association property="dvo" select="getDept" 
+  		column="dept_no" javaType="am.vo.DeptVO"/>
+  </resultMap>
+
+  <select id="all" resultMap="m1"> <!-- 결과를 모두 m1이라는 resultMap으로 전달한다. -->
+  	SELECT * FROM employees
+  </select>
+  
+  <!-- 각 사원들의 정보와 각 사원마다 부서코드를 알아내는 Select -->
+  <select id="total" resultMap="map2">
+  	SELECT e.*,de.dept_no FROM employees e, dept_emp de
+	WHERE e.emp_no = de.emp_no 
+	AND de.to_date LIKE '9999%'
+	ORDER BY e.emp_no
+  </select>
+  
+  <!-- 부서코드를 인자로 받아서 해당 부서정보를 반환하는 select -->
+  <select id="getDept" resultType="am.vo.DeptVO" parameterType="String">
+  	SELECT * FROM departments
+  	WHERE dept_no = #{no}
+  </select>
+  
+</mapper>
+
+
+
+
+
+

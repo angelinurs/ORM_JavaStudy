@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="division">
+
+  <resultMap id="map1" type="pm.vo.DiviVO">
+    <id column="dept_no" property="dept_no"/>
+    <!-- 
+  	<collection property="c_list" select="manager.all" column="dept_no"
+  		ofType="pm.vo.ChiefVO"/>
+  	 -->
+  	<association property="cvo" select="manager.getManager" column="dept_no" 
+  		javaType="pm.vo.ChiefVO"/>
+  	<collection property="e_list" select="emp.search_emp" column="dept_no"
+  		ofType="pm.vo.EmpVO"/>
+  </resultMap>
+
+
+  <!-- 부서 정보들 -->
+  <select id="all" resultMap="map1">
+  	SELECT * FROM departments
+  </select>
+
+</mapper>
