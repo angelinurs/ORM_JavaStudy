@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="dept_detail">
+ 
+	 <resultMap type="resultMap_ex2.vo.NewDepartmentVO" id="dept_all">
+	 	<id property="dept_no" column="dept_no"/>
+	 	<result property="dept_name" column="dept_name"/>
+	 	
+	 	<!-- 
+	 	 -->
+	 	<association property="cvo" javaType="resultMap_ex2.vo.CheifVO"
+	 				 column="dept_no" select="dept_mgr.search_by_dept">	
+	 	</association>
+	 	
+	 	<collection property="e_list" ofType="resultMap_ex2.vo.EployeeVO"
+	 				column="dept_no" select="employee.search_by_dept">
+	 	</collection>
+	 	
+	 </resultMap>
+	 
+	 <select id="all" resultMap="dept_all">
+	 	SELECT * 
+		FROM departments
+		ORDER BY dept_no
+	 </select>
+ 
+ 
+ </mapper>

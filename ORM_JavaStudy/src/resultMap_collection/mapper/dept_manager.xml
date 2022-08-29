@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept_manager">
+
+	<resultMap type="resultMap_collection.vo.DeptManagerVO" id="all_map">
+	
+		<id property="emp_no" column="emp_no"/>
+		<!--  dept_no 값을 넘겨주기전에 먼저 assign 받는다고 선언함. -->
+		<result property="dept_no" column="dept_no"/>
+		
+		<association property="dept_name" column="dept_no"
+					 javaType="String" select="department.searchByDept_no">
+			<!-- 
+			<result property="dept_no" column="dept_no"/>
+			<result property="dept_name" column="dept_name"/>
+			 -->
+		</association>
+		
+		<collection property="e_list" column="emp_no"
+					ofType="resultMap_collection.vo.EmpVO" select="emp.searchByDept_manager">
+		</collection>
+		
+	</resultMap>
+
+	<select id="all" resultMap="all_map">
+	  	SELECT * 
+		FROM dept_manager
+  	</select>
+  
+</mapper>

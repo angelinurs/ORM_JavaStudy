@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+	<select id="search_emp" resultType="resultMap_collection.vo.EmpVO" parameterType="String">
+	  	SELECT e.* 
+		FROM dept_emp de 
+			LEFT JOIN employees e on de.emp_no = e.emp_no  
+		WHERE de.to_date like CONCAT( '9999' , '%' ) 
+			AND de.dept_no = #{dept_no}
+  	</select>
+  	
+  	<select id="searchByDept_manager" resultType="resultMap_collection.vo.EmpVO" parameterType="String">
+	  	SELECT * 
+		FROM employees  
+		WHERE emp_no = ${emp_no}
+  	</select>
+  	
+  	
+  
+</mapper>

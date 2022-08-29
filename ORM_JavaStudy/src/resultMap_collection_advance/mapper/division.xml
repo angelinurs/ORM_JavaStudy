@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="division">
+
+	<resultMap type="resultMap_collection_advance.vo.DiviVO" id="map_all">
+		<id property="dept_no" column="dept_no"/>
+		<result property="dept_name" column="dept_name"/>
+		<collection property="c_list" column="dept_no" 
+					ofType="resultMap_collection_advance.vo.CheifVO" select="manager.all">
+		</collection>
+	</resultMap>
+
+	<select id="all" resultMap="map_all">
+		SELECT *
+		FROM departments	
+	</select>
+
+
+</mapper>

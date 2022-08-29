@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="total_emp">
+ 
+	 <resultMap type="resultMap_ex.vo.TotalVO" id="total_all">
+	 	<id property="emp_no" column="de_emp_no"/>
+	 	<result property="from_date" column="from_date"/>
+	 	
+	 	<association property="evo" javaType="resultMap_ex.vo.EmpVO">
+	 		<id property="emp_no" column="e_emp_no"/>
+	 		<result property="first_name" column="first_name"/>
+	 		<result property="gender" column="gender"/>
+	 		<result property="hire_date" column="hire_date"/>
+	 	</association>
+	 	
+	 	<association property="dvo" javaType="resultMap_ex.vo.DepartmentVO">
+	 		<id property="dept_no" column="dept_no"/>
+	 		<result property="dept_name" column="dept_name"/>
+	 	</association>
+	 	
+	 </resultMap>
+	 
+	 <select id="all" resultMap="total_all">
+	 	SELECT 
+			de.emp_no AS de_emp_no,
+			de.from_date AS from_date,
+			de.to_date AS to_date,
+			e.emp_no AS e_emp_no,
+			e.first_name AS first_name, 
+			e.gender AS gender,
+			e.hire_date AS hire_date,
+		    d.dept_no AS dept_no,
+		    d.dept_name AS dept_name
+		FROM dept_emp de 
+			LEFT JOIN employees e ON de.emp_no = e.emp_no 
+		    LEFT JOIN departments d ON de.dept_no = d.dept_no
+		WHERE de.to_date LIKE CONCAT ( '9999', '%' );
+	 </select>
+ 
+ 
+ </mapper>

@@ -16,6 +16,8 @@
 
 ## - resultMap_advance
 
+## - resultMap_collection
+
 
 # Flow
 ## create VO
